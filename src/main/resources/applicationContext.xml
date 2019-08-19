@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/tx
+          http://www.springframework.org/schema/tx/spring-tx.xsd
+         http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context.xsd
+         http://www.springframework.org/schema/aop
+         http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!--&lt;!&ndash;实例化增强类和目标类&ndash;&gt;
+    <bean id="target" class="com.kgc.xml.Target"></bean>
+    <bean id="handler" class="com.kgc.xml.Handler"></bean>
+
+    <aop:config>
+        <aop:pointcut id="mycut1" expression="execution(* com.kgc.xml.Target.*(..))"></aop:pointcut>
+
+        <aop:aspect ref="handler">
+            <aop:before method="login" pointcut-ref="mycut1"></aop:before>
+            <aop:after-returning method="afterReturn" pointcut-ref="mycut1"></aop:after-returning>
+            <aop:around method="around" pointcut-ref="mycut1"></aop:around>
+            <aop:after-throwing method="excep" pointcut-ref="mycut1"></aop:after-throwing>
+            <aop:after method="end" pointcut-ref="mycut1"></aop:after>
+        </aop:aspect>
+
+    </aop:config>-->
+
+    <!--开启 类的注解 切点的注解-->
+    <context:component-scan base-package="com.kgc"></context:component-scan>
+    <!--开启切点的注解-->
+    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+
+    <!--实例化 jdbc模板对象  需要数据源  -->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--创建一个自己的dataSource-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/school?characterEncoding=utf-8"/>
+        <property name="user" value="root"/>
+        <property name="password" value="123456"/>
+    </bean>
+
+    <!--配置事务 管理  需要数据源-->
+    <bean id="transactionManager1" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--开启 事务的注解 -->
+    <tx:annotation-driven transaction-manager="transactionManager1"></tx:annotation-driven>
+</beans>
